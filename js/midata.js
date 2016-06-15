@@ -8,7 +8,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	actionDef.resolve();
 	console.log(document.referrer);
 	var domain = function(url) {
-	   return url.split("/")[2];
+	   return url.split("/")[2].split(":")[0];
 	}
 	
 	var host = window.location.hostname || "localhost";
