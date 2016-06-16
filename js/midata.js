@@ -119,7 +119,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	
 	return service;	
 }]);
-midata.factory('midataPortal', [ '$window', '$interval', function($window, $interval) {
+midata.factory('midataPortal', [ '$window', '$location', '$interval', function($window, $location, $interval) {
 	
 	var service = {};
 	var height = 0;
@@ -139,6 +139,8 @@ midata.factory('midataPortal', [ '$window', '$interval', function($window, $inte
 		  height = newheight;
 		}
 	};
+	
+	service.language = $location.search().lang;
 	
 	return service;
 }]);
