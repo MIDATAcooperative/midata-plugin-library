@@ -12,9 +12,8 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	}
 	
 	var host = window.location.hostname || "localhost";
-	var targetDomain = (host == "localhost") ? domain(document.referrer) : host; 
-	
-	var baseurl =  window.location.hostname ? ("https://"+targetDomain+":9000") : "http://localhost:9001";
+	 	
+	var baseurl =  window.location.hostname ? ("https://"+((host == "localhost") ? domain(document.referrer) : host)+":9000") : "http://localhost:9001";
 	
 	service.createRecord = function(authToken, meta, data, id) {
 		// construct json
