@@ -143,8 +143,12 @@ midata.factory('midataPortal', [ '$window', '$location', '$interval', function($
 		$window.parent.postMessage({ type: "link", name:window.name, url:url, pos:pos, params:params }, "*");
 	};
 	
-	service.closeView = function() {
+	service.doneNotification = function() {
 		$window.parent.postMessage({ type: "close", name:window.name }, "*");
+	};
+	
+	service.updateNotification = function() {
+		$window.parent.postMessage({ type: "update", name:window.name }, "*");
 	};
 	
 	service.language = $location.search().lang;
