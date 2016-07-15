@@ -139,6 +139,10 @@ midata.factory('midataPortal', [ '$window', '$location', '$interval', function($
 		}
 	};
 	
+	service.openLink = function(pos, url, params) {
+		$window.parent.postMessage({ type: "link", url:url, pos:pos, params:params }, "*");
+	};
+	
 	service.language = $location.search().lang;
 	
 	return service;
