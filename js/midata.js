@@ -134,13 +134,13 @@ midata.factory('midataPortal', [ '$window', '$location', '$interval', function($
 		//console.log(newheight);
 		//if (newheight1 > newheight) newheight = newheight1;		
 		if (newheight !== height) {				  
-		  $window.parent.postMessage({ type: "height", viewHeight : newheight }, "*");		
+		  $window.parent.postMessage({ type: "height", name:window.name, viewHeight : newheight }, "*");		
 		  height = newheight;
 		}
 	};
 	
 	service.openLink = function(pos, url, params) {
-		$window.parent.postMessage({ type: "link", url:url, pos:pos, params:params }, "*");
+		$window.parent.postMessage({ type: "link", name:window.name, url:url, pos:pos, params:params }, "*");
 	};
 	
 	service.language = $location.search().lang;
