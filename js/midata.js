@@ -143,6 +143,10 @@ midata.factory('midataPortal', [ '$window', '$location', '$interval', function($
 		$window.parent.postMessage({ type: "link", name:window.name, url:url, pos:pos, params:params }, "*");
 	};
 	
+	service.setLink = function(func, pos, url, params) {
+		$window.parent.postMessage({ type: "set", name:window.name, func:func , url:url, pos:pos, params:params }, "*");
+	};
+	
 	service.doneNotification = function() {
 		$window.parent.postMessage({ type: "close", name:window.name }, "*");
 	};
