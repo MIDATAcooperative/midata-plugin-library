@@ -8,6 +8,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	actionDef.resolve();
 	console.log(document.referrer);
 	var domain = function(url) {
+   	   if (!url) return "localhost";
 	   return url.split("/")[2].split(":")[0];
 	}
 	
@@ -155,7 +156,7 @@ midata.factory('midataPortal', [ '$window', '$location', '$interval', function($
 		$window.parent.postMessage({ type: "update", name:window.name }, "*");
 	};
 	
-	service.language = $location.search().lang;
+	service.language = $location.search().lang || 'en';
 	
 	return service;
 }]);
