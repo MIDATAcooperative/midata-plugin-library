@@ -77,6 +77,14 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	};
 	
 	/**
+	 * Get surplus parameters returned from OAuth authentication
+	 */
+	service.getOAuthParams = function(authToken) {
+		 var data = { "authToken" : authToken  };		
+		 return $http.post(baseurl + "/v1/plugin_api/oauth/get", data);
+	};
+	
+	/**
 	 * Store configuration for current plugin
 	 */
 	service.setConfig = function(authToken, config, autoimport) {
