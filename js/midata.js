@@ -135,6 +135,42 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    return $http.post(baseurl + "/v1/plugin_api/request/oauth1", data);
 	};
 	
+	/**
+	 * Use FHIR API to create a resource
+	 */
+	service.fhirCreate = function(authToken, resource) {						
+	    return $http({
+	    	method : "POST",
+	    	url : baseurl + "/fhir/"+resource.resourceType,
+	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	data : resource
+	    });
+	};
+	
+	/**
+	 * Use FHIR SEARCH
+	 */
+	service.fhirSearch = function(authToken, resourceType, params) {						
+	    return $http({
+	    	method : "GET",
+	    	url : baseurl + "/fhir/"+resourceType,
+	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	params : params	    	
+	    });
+	};
+	
+	/**
+	 * Use FHIR batch or transaction
+	 */
+	service.fhirTransaction = function(authToken, bundle) {						
+	    return $http({
+	    	method : "POST",
+	    	url : baseurl + "/fhir",
+	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	data : bundle	    	
+	    });
+	};
+	
 	service.run = function(authToken) {	
 		var data = { "authToken": authToken  };		
 	    return $http.post(baseurl + "/v1/plugin_api/run", data);
