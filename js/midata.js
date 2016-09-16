@@ -162,13 +162,17 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	/**
 	 * Use FHIR batch or transaction
 	 */
-	service.fhirTransaction = function(authToken, bundle) {						
-	    return $http({
-	    	method : "POST",
-	    	url : baseurl + "/fhir",
-	    	headers : { "Authorization" : "Bearer "+authToken },
-	    	data : bundle	    	
-	    });
+	service.fhirTransaction = function(authToken, bundle) {							    	   
+	    var f = function() { 
+	    	return $http({
+		    	method : "POST",
+		    	url : baseurl + "/fhir",
+		    	headers : { "Authorization" : "Bearer "+authToken },
+		    	data : bundle	    	
+		    }); 
+	    };
+		actionChain = actionChain.then(f);	
+		return actionChain;
 	};
 	
 	service.run = function(authToken) {	
@@ -183,6 +187,8 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		var data = { "authToken": authToken  };		
 	    return $http.post(baseurl + "/v1/plugin_api/records/newId", data);
 	};
+	
+	service.baseurl = baseurl;
 	
 	return service;	
 }]);
