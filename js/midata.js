@@ -12,18 +12,18 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	}
 	
 	var host = window.location.hostname || "localhost";
-	var isDebug = window.baseurl !== undefined;
+	var isDebug = window._baseurl !== undefined && window._baseurl !== "http://localhost:9001";
 	 	
-	var baseurl =  window.location.hostname ? ("https://"+((host == "localhost") ? domain(document.referrer) : host)+":9000") : (window.baseurl ? window.baseurl : "http://localhost:9001");
-	
+	var baseurl =  !window._baseurl ? ("https://"+((host == "localhost") ? domain(document.referrer) : host)+":9000") : window._baseurl;
+	console.log(baseurl);
 	var debug = function(name, fkt) {
 		return function() {
 			console.log("call", name, [].slice.apply(arguments).slice(1));
 			var result = fkt.apply(this, arguments);
 			if (result && result.then) {			  
 			  result.then(function(r) {
-				console.log("return", name, r);
-			  }, function(r) {
+				console.log("success["+r.status+"]", name, r.data);
+			  }, function(r) {				 
 			    console.log("fail["+r.status+"]", name, r.data);
 			  });
 			} 
