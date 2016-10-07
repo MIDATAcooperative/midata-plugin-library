@@ -14,7 +14,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	
 	var host = window.location.hostname || "localhost";
 	 	
-	var baseurl =  window.location.hostname ? ("https://"+((host == "localhost") ? domain(document.referrer) : host)+":9000") : "http://localhost:9001";
+	var baseurl =  window.location.hostname ? ("https://"+((host == "localhost") ? domain(document.referrer) : host)+":9000") : (window.baseurl ? window.baseurl : "http://localhost:9001");
 	
 	/**
 	 * Save a new record on the MIDATA platform
