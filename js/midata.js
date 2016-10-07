@@ -5,16 +5,31 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	
 	var actionDef = $q.defer();
 	var actionChain = actionDef.promise;
-	actionDef.resolve();
-	console.log(document.referrer);
+	actionDef.resolve();	
 	var domain = function(url) {
    	   if (!url) return "localhost";
 	   return url.split("/")[2].split(":")[0];
 	}
 	
 	var host = window.location.hostname || "localhost";
+	var isDebug = window.baseurl !== undefined;
 	 	
 	var baseurl =  window.location.hostname ? ("https://"+((host == "localhost") ? domain(document.referrer) : host)+":9000") : (window.baseurl ? window.baseurl : "http://localhost:9001");
+	
+	var debug = function(name, fkt) {
+		return function() {
+			console.log("call", name, [].slice.apply(arguments).slice(1));
+			var result = fkt.apply(this, arguments);
+			if (result && result.then) {			  
+			  result.then(function(r) {
+				console.log("return", name, r);
+			  }, function(r) {
+			    console.log("fail["+r.status+"]", name, r.data);
+			  });
+			} 
+			return result;
+		};
+	}; 
 	
 	/**
 	 * Save a new record on the MIDATA platform
@@ -189,6 +204,25 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	};
 	
 	service.baseurl = baseurl;
+	
+	if (isDebug) {
+		service.createRecord = debug("createRecord", service.createRecord);
+		service.updateRecord = debug("updateRecord", service.updateRecord);			
+		service.getRecords = debug("getRecord", service.getRecord);
+		service.getSummary = debug("getSummary", service.getSummary);
+		service.getConfig = debug("getConfig", service.getConfig);		
+		service.getOAuthParams = debug("getOAuthParams", service.getOAuthParams);			 
+		service.setConfig = debug("setConfig", service.setConfig);
+		service.cloneAs = debug("cloneAs", service.cloneAs);
+		service.searchCoding = debug("searchCoding", service.searchCoding);
+		service.searchContent = debug("searchContent", service.searchContent);
+		service.oauth2Request = debug("oauth2Request", service.oauth2Request);
+		service.oauth1Request = debug("oauth1Request", service.oauth1Request);
+		service.fhirCreate = debug("fhirCreate", service.fhirCreate);		
+		service.fhirSearch = debug("fhirSearch", service.fhirSearch);
+		service.fhirTransaction = debug("fhirTransaction", service.fhirTransaction);		
+		service.newId = debug("newId", service.newId);
+	}
 	
 	return service;	
 }]);
