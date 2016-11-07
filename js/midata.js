@@ -181,7 +181,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    var f = function() { 
 	    	return $http({
 		    	method : "POST",
-		    	url : baseurl + "/fhir",
+		    	url : baseurl + "/fhir?_format=json",
 		    	headers : { "Authorization" : "Bearer "+authToken, "Content-Type" : "application/json+fhir" },
 		    	data : bundle	    	
 		    }); 
