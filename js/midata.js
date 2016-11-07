@@ -182,7 +182,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    	return $http({
 		    	method : "POST",
 		    	url : baseurl + "/fhir",
-		    	headers : { "Authorization" : "Bearer "+authToken },
+		    	headers : { "Authorization" : "Bearer "+authToken, "Content-Type" : "application/json+fhir" },
 		    	data : bundle	    	
 		    }); 
 	    };
@@ -208,7 +208,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	if (isDebug) {
 		service.createRecord = debug("createRecord", service.createRecord);
 		service.updateRecord = debug("updateRecord", service.updateRecord);			
-		service.getRecords = debug("getRecord", service.getRecords);
+		service.getRecords = debug("getRecords", service.getRecords);
 		service.getSummary = debug("getSummary", service.getSummary);
 		service.getConfig = debug("getConfig", service.getConfig);		
 		service.getOAuthParams = debug("getOAuthParams", service.getOAuthParams);			 
