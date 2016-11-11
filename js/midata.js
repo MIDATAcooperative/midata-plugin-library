@@ -151,7 +151,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	};
 	
 	/**
-	 * Use FHIR API to create a resource
+	 * Uses FHIR API to create a resource
 	 */
 	service.fhirCreate = function(authToken, resource) {						
 	    return $http({
@@ -163,7 +163,19 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	};
 	
 	/**
-	 * Use FHIR SEARCH
+	 * Uses FHIR API to update a resource
+	 */
+	service.fhirUpdate = function(authToken, resource) {
+		return $http({
+			method : "PUT",
+			url : baseurl + "/fhir/"+resource.resourceType+"/"+resource.id,
+			headers : { "Authorization" : "Bearer "+authToken },
+	    	data : resource
+		});
+	};
+	
+	/**
+	 * Uses FHIR SEARCH
 	 */
 	service.fhirSearch = function(authToken, resourceType, params) {						
 	    return $http({
@@ -181,8 +193,8 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    var f = function() { 
 	    	return $http({
 		    	method : "POST",
-		    	url : baseurl + "/fhir?_format=json",
-		    	headers : { "Authorization" : "Bearer "+authToken, "Content-Type" : "application/json+fhir" },
+		    	url : baseurl + "/fhir",
+		    	headers : { "Authorization" : "Bearer "+authToken },
 		    	data : bundle	    	
 		    }); 
 	    };
@@ -218,7 +230,8 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		service.searchContent = debug("searchContent", service.searchContent);
 		service.oauth2Request = debug("oauth2Request", service.oauth2Request);
 		service.oauth1Request = debug("oauth1Request", service.oauth1Request);
-		service.fhirCreate = debug("fhirCreate", service.fhirCreate);		
+		service.fhirCreate = debug("fhirCreate", service.fhirCreate);
+		service.fhirUpdate = debug("fhirUpdate", service.fhirUpdate);	
 		service.fhirSearch = debug("fhirSearch", service.fhirSearch);
 		service.fhirTransaction = debug("fhirTransaction", service.fhirTransaction);		
 		service.newId = debug("newId", service.newId);
