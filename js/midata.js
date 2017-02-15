@@ -271,6 +271,13 @@ midata.factory('midataPortal', [ '$window', '$location', '$interval', function($
 	};
 	
 	/**
+	 * open link to different app in new view in portal.
+	 */
+	service.openApp = function(pos, app, params) {
+		$window.parent.postMessage({ type: "link", name:window.name, app:app, pos:pos, params:params }, "*");
+	};
+	
+	/**
 	 * change default button target of portal button
 	 */
 	service.setLink = function(func, pos, url, params) {
