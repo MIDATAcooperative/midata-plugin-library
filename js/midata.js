@@ -175,6 +175,18 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	};
 	
 	/**
+	 * Uses FHIR READ or VREAD (if version given)
+	 */
+	service.fhirRead = function(authToken, resourceType, id, version) {						
+	    return $http({
+	    	method : "GET",
+	    	url : baseurl + "/fhir/"+resourceType+"/"+id+(version !== undefined ? "/_history/"+version : ""),
+	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	params : params	    	
+	    });
+	};
+	
+	/**
 	 * Uses FHIR SEARCH
 	 */
 	service.fhirSearch = function(authToken, resourceType, params) {						
@@ -185,6 +197,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    	params : params	    	
 	    });
 	};
+		
 	
 	/**
 	 * Use FHIR batch or transaction
@@ -231,6 +244,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		service.oauth2Request = debug("oauth2Request", service.oauth2Request);
 		service.oauth1Request = debug("oauth1Request", service.oauth1Request);
 		service.fhirCreate = debug("fhirCreate", service.fhirCreate);
+		service.fhirRead = debug("fhirRead", service.fhirRead);
 		service.fhirUpdate = debug("fhirUpdate", service.fhirUpdate);	
 		service.fhirSearch = debug("fhirSearch", service.fhirSearch);
 		service.fhirTransaction = debug("fhirTransaction", service.fhirTransaction);		
@@ -302,6 +316,11 @@ midata.factory('midataPortal', [ '$window', '$location', '$interval', function($
 	 * Language chosen by user in portal
 	 */
 	service.language = $location.search().lang || 'en';
+	
+	/**
+	 * Logged in user
+	 */
+	service.owner = $location.search().owner;
 	
 	return service;
 }]);
