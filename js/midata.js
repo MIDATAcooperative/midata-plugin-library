@@ -181,8 +181,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    return $http({
 	    	method : "GET",
 	    	url : baseurl + "/fhir/"+resourceType+"/"+id+(version !== undefined ? "/_history/"+version : ""),
-	    	headers : { "Authorization" : "Bearer "+authToken },
-	    	params : params	    	
+	    	headers : { "Authorization" : "Bearer "+authToken }
 	    });
 	};
 	
