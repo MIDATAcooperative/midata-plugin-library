@@ -157,7 +157,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    return $http({
 	    	method : "POST",
 	    	url : baseurl + "/fhir/"+resource.resourceType,
-	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	headers : { "Authorization" : "Bearer "+authToken , "Prefer" : "return=representation" },
 	    	data : resource
 	    });
 	};
@@ -169,7 +169,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		return $http({
 			method : "PUT",
 			url : baseurl + "/fhir/"+resource.resourceType+"/"+resource.id,
-			headers : { "Authorization" : "Bearer "+authToken },
+			headers : { "Authorization" : "Bearer "+authToken, "Prefer" : "return=representation" },
 	    	data : resource
 		});
 	};
