@@ -7,7 +7,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	var actionChain = actionDef.promise;
 	actionDef.resolve();	
 	var domain = function(url) {
-   	   if (!url || url=="localhost") return "localhost:9000";
+   	   if (!url || url=="localhost") return "localhost";
 	   return url.split("/")[2].split(":")[0];
 	}
 	
@@ -15,6 +15,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	var isDebug = window._baseurl !== undefined && window._baseurl !== "http://localhost:9001";
 	 	
 	var baseurl =  !window._baseurl ? ("https://"+((host == "localhost") ? domain(document.referrer) : host)) : window._baseurl;
+	if (baseurl == "https://localhost") baseurl = "https://localhost:9000"; 
 	console.log(baseurl);
 	var debug = function(name, fkt) {
 		return function() {
