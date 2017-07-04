@@ -7,7 +7,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	var actionChain = actionDef.promise;
 	actionDef.resolve();	
 	var domain = function(url) {
-   	   if (!url) return "localhost";
+   	   if (!url || url=="localhost") return "localhost:9000";
 	   return url.split("/")[2].split(":")[0];
 	}
 	
