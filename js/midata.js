@@ -30,6 +30,20 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 			} 
 			return result;
 		};
+	};
+	var single = false;
+	
+	service.setSingleRequestMode = function(enable) {
+	    single = enable;
+	};
+	
+	var exec = function(func, alwayssingle) {
+		if (single || alwayssingle) {
+			actionChain = actionChain.then(func);
+			return actionChain;
+		} else {
+			return func();
+		}
 	}; 
 	
 	/**
@@ -45,9 +59,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		if (id) data._id = id;
 		
 		
-		var f = function() { return $http.post(baseurl + "/v1/plugin_api/records/create", data); };
-		actionChain = actionChain.then(f);	
-		return actionChain;
+		return exec(function() { return $http.post(baseurl + "/v1/plugin_api/records/create", data); }, true);		
 	};
 	
 	/**
@@ -63,9 +75,8 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		};
 				
 		
-		var f = function() { return $http.post(baseurl + "/v1/plugin_api/records/update", data); };
-		actionChain = actionChain.then(f);	
-		return actionChain;
+		return exec(function() { return $http.post(baseurl + "/v1/plugin_api/records/update", data); }, true);
+		
 	};
 		
 	/**
@@ -73,7 +84,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	 */
 	service.getRecords = function(authToken, properties,fields) {
 		 var data = { "authToken" : authToken, "properties" : properties, fields : fields };		
-		 return $http.post(baseurl + "/v1/plugin_api/records/search", data);
+		 return exec(function() { return $http.post(baseurl + "/v1/plugin_api/records/search", data); });
 	};
 	
 	/**
@@ -81,7 +92,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	 */
 	service.getSummary = function(authToken, level, properties, fields) {
 		 var data = { "authToken" : authToken, "properties" : ( properties || {} ), "summarize" : level.toUpperCase(), "fields" : (fields || [])  };		
-		 return $http.post(baseurl + "/v1/plugin_api/records/summary", data);
+		 return exec(function() { return $http.post(baseurl + "/v1/plugin_api/records/summary", data); });
 	};
 	
 	/**
@@ -89,7 +100,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	 */
 	service.getConfig = function(authToken) {
 		 var data = { "authToken" : authToken  };		
-		 return $http.post(baseurl + "/v1/plugin_api/config/get", data);
+		 return exec(function() { return $http.post(baseurl + "/v1/plugin_api/config/get", data); });
 	};
 	
 	/**
@@ -97,7 +108,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	 */
 	service.getOAuthParams = function(authToken) {
 		 var data = { "authToken" : authToken  };		
-		 return $http.post(baseurl + "/v1/plugin_api/oauth/get", data);
+		 return exec(function() { return $http.post(baseurl + "/v1/plugin_api/oauth/get", data); });
 	};
 	
 	/**
@@ -106,7 +117,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	service.setConfig = function(authToken, config, autoimport) {
 		 var data = { "authToken" : authToken, "config" : config  };
 		 if (autoimport !== undefined) data.autoimport = autoimport;
-		 return $http.post(baseurl + "/v1/plugin_api/config/set", data);
+		 return exec(function() { return $http.post(baseurl + "/v1/plugin_api/config/set", data); });
 	};
 	
 	/**
@@ -114,7 +125,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	 */
 	service.cloneAs = function(authToken, name, config) {
 		 var data = { "authToken" : authToken, "name" : name, "config" : config };		
-		 return $http.post(baseurl + "/v1/plugin_api/clone", data);
+		 return exec(function() { return $http.post(baseurl + "/v1/plugin_api/clone", data); });
 	};
 	
 	/**
@@ -139,7 +150,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	service.oauth2Request = function(authToken, url) {	
 		var data = { "authToken": authToken, "url": url };		
 	
-	    return $http.post(baseurl + "/v1/plugin_api/request/oauth2", data);
+		return exec(function() { return $http.post(baseurl + "/v1/plugin_api/request/oauth2", data); });
 	};
 	
 	/**
@@ -148,54 +159,54 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	service.oauth1Request = function(authToken, url) {	
 		var data = { "authToken": authToken, "url": url };		
 	
-	    return $http.post(baseurl + "/v1/plugin_api/request/oauth1", data);
+		return exec(function() { return $http.post(baseurl + "/v1/plugin_api/request/oauth1", data); });
 	};
 	
 	/**
 	 * Uses FHIR API to create a resource
 	 */
 	service.fhirCreate = function(authToken, resource) {						
-	    return $http({
+		return exec(function() { return $http({
 	    	method : "POST",
 	    	url : baseurl + "/fhir/"+resource.resourceType,
 	    	headers : { "Authorization" : "Bearer "+authToken , "Prefer" : "return=representation" },
 	    	data : resource
-	    });
+	    }); });
 	};
 	
 	/**
 	 * Uses FHIR API to update a resource
 	 */
 	service.fhirUpdate = function(authToken, resource) {
-		return $http({
+		return exec(function() { return $http({
 			method : "PUT",
 			url : baseurl + "/fhir/"+resource.resourceType+"/"+resource.id,
 			headers : { "Authorization" : "Bearer "+authToken, "Prefer" : "return=representation" },
 	    	data : resource
-		});
+		}); });
 	};
 	
 	/**
 	 * Uses FHIR READ or VREAD (if version given)
 	 */
 	service.fhirRead = function(authToken, resourceType, id, version) {						
-	    return $http({
+		return exec(function() { return $http({
 	    	method : "GET",
 	    	url : baseurl + "/fhir/"+resourceType+"/"+id+(version !== undefined ? "/_history/"+version : ""),
 	    	headers : { "Authorization" : "Bearer "+authToken }
-	    });
+	    }); });
 	};
 	
 	/**
 	 * Uses FHIR SEARCH
 	 */
 	service.fhirSearch = function(authToken, resourceType, params) {						
-	    return $http({
+		return exec(function() { return $http({
 	    	method : "GET",
 	    	url : baseurl + "/fhir/"+resourceType,
 	    	headers : { "Authorization" : "Bearer "+authToken },
 	    	params : params	    	
-	    });
+	    }); });
 	};
 		
 	
@@ -203,21 +214,19 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	 * Use FHIR batch or transaction
 	 */
 	service.fhirTransaction = function(authToken, bundle) {							    	   
-	    var f = function() { 
+		return exec(function() {  
 	    	return $http({
 		    	method : "POST",
 		    	url : baseurl + "/fhir",
 		    	headers : { "Authorization" : "Bearer "+authToken },
 		    	data : bundle	    	
 		    }); 
-	    };
-		actionChain = actionChain.then(f);	
-		return actionChain;
+	    }, true);		
 	};
 	
 	service.run = function(authToken) {	
 		var data = { "authToken": authToken  };		
-	    return $http.post(baseurl + "/v1/plugin_api/run", data);
+		return exec(function() { return $http.post(baseurl + "/v1/plugin_api/run", data); });
 	};
 	
 	/**
