@@ -39,7 +39,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	
 	var exec = function(func, alwayssingle) {
 		if (single || alwayssingle) {
-			actionChain = actionChain.then(func);
+			actionChain = actionChain.then(func, func);
 			return actionChain;
 		} else {
 			return func();
