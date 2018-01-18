@@ -46,6 +46,20 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		}
 	}; 
 	
+	var unpackBundle = function(promise) {
+		return promise.then(function(result) {
+		  if (result.data && result.data.entry) {
+			  var resultArray = [];
+			  angular.forEach(result.data.entry, function(item) {
+				 resultArray.push(item.resource); 
+			  });
+			  return resultArray;
+		  } else {
+			  return [];
+		  }
+		});
+	};
+	
 	/**
 	 * Save a new record on the MIDATA platform
 	 */
@@ -200,15 +214,25 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	/**
 	 * Uses FHIR SEARCH
 	 */
-	service.fhirSearch = function(authToken, resourceType, params) {						
-		return exec(function() { return $http({
+	service.fhirSearch = function(authToken, resourceType, params, unbundle) {						
+		var result = exec(function() { return $http({
 	    	method : "GET",
 	    	url : baseurl + "/fhir/"+resourceType,
 	    	headers : { "Authorization" : "Bearer "+authToken },
 	    	params : params	    	
 	    }); });
+		return unbundle ? unpackBundle(result) : result;
 	};
 		
+	service.lastn = function(authToken, params, unbundle) {
+		var result = exec(function() { return $http({
+	    	method : "GET",
+	    	url : baseurl + "/fhir/Observation/$lastn",
+	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	params : params	    	
+	    }); });
+		return unbundle ? unpackBundle(result) : result;
+	};	
 	
 	/**
 	 * Use FHIR batch or transaction
