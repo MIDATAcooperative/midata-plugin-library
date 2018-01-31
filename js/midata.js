@@ -161,8 +161,9 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	/**
 	 * Execute OAuth2 GET request on target server using MIDATA authorization
 	 */
-	service.oauth2Request = function(authToken, url) {	
-		var data = { "authToken": authToken, "url": url };		
+	service.oauth2Request = function(authToken, url, method, body) {	
+		var data = { "authToken": authToken, "url": url, "method" : (method || "get") };
+		if (body) data.body = body;
 	
 		return exec(function() { return $http.post(baseurl + "/v1/plugin_api/request/oauth2", data); });
 	};
@@ -280,6 +281,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		service.fhirRead = debug("fhirRead", service.fhirRead);
 		service.fhirUpdate = debug("fhirUpdate", service.fhirUpdate);	
 		service.fhirSearch = debug("fhirSearch", service.fhirSearch);
+		service.lastn = debug("lastn", service.lastn);
 		service.fhirTransaction = debug("fhirTransaction", service.fhirTransaction);		
 		service.newId = debug("newId", service.newId);
 	}
