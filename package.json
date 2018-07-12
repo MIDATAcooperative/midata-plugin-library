@@ -1,0 +1,26 @@
+{
+  "name": "angular-midatajs",
+  "version": "1.0.0",
+  "description": "AngularJS library for MIDATA portal plugins",
+  "main": "js/midata.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MIDATAcooperative/midata-plugin-library.git"
+  },
+  "keywords": [
+    "midata",
+    "midatajs",
+    "angular",
+    "plugin",
+    "portal"
+  ],
+  "author": "Alexander Kreutz (alexander.kreutz@midata.coop)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MIDATAcooperative/midata-plugin-library/issues"
+  },
+  "homepage": "https://github.com/MIDATAcooperative/midata-plugin-library#readme"
+}
