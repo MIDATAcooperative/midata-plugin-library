@@ -11,3 +11,8 @@ In order to use this library with bower add this URL as dependency to your bower
 git://github.com/MIDATAcooperative/midata-plugin-library.git
 ```
 
+or with NPM
+
+```
+npm i @midata/angularjs
+```
