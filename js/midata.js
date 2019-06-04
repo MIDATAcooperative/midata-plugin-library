@@ -10,6 +10,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
    	   if (!url || url=="localhost") return "localhost";
 	   return url.split("/")[2].split(":")[0];
 	}
+	var fhirVersion = "3.0";	
 	
 	var host = window.location.hostname || "localhost";
 	var isDebug = window._baseurl !== undefined && window._baseurl !== "http://localhost:9001";
@@ -58,6 +59,14 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 			  return [];
 		  }
 		});
+	};
+	
+	var mimeType = function() {
+		return "application/fhir+json; fhirVersion="+fhirVersion;
+	}
+	
+	service.setFhirVersion = function(version) {
+		fhirVersion = version;
 	};
 	
 	/**
@@ -184,7 +193,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		return exec(function() { return $http({
 	    	method : "POST",
 	    	url : baseurl + "/fhir/"+resource.resourceType,
-	    	headers : { "Authorization" : "Bearer "+authToken , "Prefer" : "return=representation" },
+	    	headers : { "Authorization" : "Bearer "+authToken , "Prefer" : "return=representation", "Content-Type" : mimeType(), "Accept" : mimeType() },
 	    	data : resource
 	    }); });
 	};
@@ -196,7 +205,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		return exec(function() { return $http({
 			method : "PUT",
 			url : baseurl + "/fhir/"+resource.resourceType+"/"+resource.id,
-			headers : { "Authorization" : "Bearer "+authToken, "Prefer" : "return=representation" },
+			headers : { "Authorization" : "Bearer "+authToken, "Prefer" : "return=representation", "Content-Type" : mimeType(), "Accept" : mimeType() },
 	    	data : resource
 		}); });
 	};
@@ -208,7 +217,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		return exec(function() { return $http({
 	    	method : "GET",
 	    	url : baseurl + "/fhir/"+resourceType+"/"+id+(version !== undefined ? "/_history/"+version : ""),
-	    	headers : { "Authorization" : "Bearer "+authToken }
+	    	headers : { "Authorization" : "Bearer "+authToken, "Accept" : mimeType() }
 	    }); });
 	};
 	
@@ -219,7 +228,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		var result = exec(function() { return $http({
 	    	method : "GET",
 	    	url : baseurl + "/fhir/"+resourceType,
-	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	headers : { "Authorization" : "Bearer "+authToken, "Accept" : mimeType() },
 	    	params : params	    	
 	    }); });
 		return unbundle ? unpackBundle(result) : result;
@@ -229,7 +238,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 		var result = exec(function() { return $http({
 	    	method : "GET",
 	    	url : baseurl + "/fhir/Observation/$lastn",
-	    	headers : { "Authorization" : "Bearer "+authToken },
+	    	headers : { "Authorization" : "Bearer "+authToken, "Accept" : mimeType() },
 	    	params : params	    	
 	    }); });
 		return unbundle ? unpackBundle(result) : result;
@@ -243,7 +252,7 @@ midata.factory('midataServer', [ '$http', '$q', function($http, $q) {
 	    	return $http({
 		    	method : "POST",
 		    	url : baseurl + "/fhir",
-		    	headers : { "Authorization" : "Bearer "+authToken },
+		    	headers : { "Authorization" : "Bearer "+authToken, "Content-Type" : mimeType(), "Accept" : mimeType() },
 		    	data : bundle	    	
 		    }); 
 	    }, true);		
