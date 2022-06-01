@@ -1,3 +1,7 @@
+# Deprecated
+
+AngularJS 1.x is at the end of its life. Please use the midata-plugin-vue-library for new projects.
+
 MIDATA COOP Portal Plugin Library
 =============================
 
